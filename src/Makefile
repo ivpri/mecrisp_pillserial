@@ -25,6 +25,7 @@ SRC =			\
 CROSS_COMPILE ?= arm-none-eabi-
 CC = $(CROSS_COMPILE)gcc
 OBJCOPY = $(CROSS_COMPILE)objcopy
+OBJDUMP = $(CROSS_COMPILE)objdump
 
 OPT_FLAGS = -Os
 CFLAGS += -mcpu=cortex-m3 -mthumb \
@@ -43,7 +44,7 @@ else
 LDFLAGS += --specs=nosys.specs
 endif
 
-all:	pill_serial.bin
+all:	pill_serial.bin pill_serial.lss
 
 host_clean:
 	-$(Q)$(RM) pill_serial.bin
@@ -65,6 +66,10 @@ pill_serial.elf: version.h $(OBJ)
 %.hex:	%
 	@echo "  OBJCOPY $@"
 	$(Q)$(OBJCOPY) -O ihex $^ $@
+
+%.lss:	%.elf
+	@echo "  OBJDUMP $@"
+	$(Q)$(OBJDUMP) -Std $^ > $@
 
 .PHONY:	clean host_clean FORCE
 
