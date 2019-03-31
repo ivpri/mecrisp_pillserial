@@ -62,17 +62,13 @@ void platform_request_boot(void);
 # define USBUART_DEBUG
 #endif
 
-#define BOARD_IDENT       "Black Magic Probe (STLINK), (Firmware " FIRMWARE_VERSION ")"
+#define BOARD_IDENT       "Mecrisp-Stellaris USB pill-serial, (Firmware " FIRMWARE_VERSION ")"
 #define UPD_IFACE_STRING  "@Internal Flash   /0x08000000/8*001Kg"
-
-#define LED_PORT	GPIOA
-/* Use PC13 for a "dummy" uart led. So we can observe the LED. */
-#define LED_PORT_UART	GPIOC
-#define LED_UART	GPIO13
 
 #define USB_DRIVER      st_usbfs_v1_usb_driver
 #define USB_IRQ	        NVIC_USB_LP_CAN_RX0_IRQ
-#define USB_ISR	        usb_lp_can_rx0_isr
+// #define USB_ISR	        usb_lp_can_rx0_isr
+#define USB_ISR	        usb_lp_can_rx0
 /* Interrupt priorities.  Low numbers are high priority.
  * For now USART2 preempts USB which may spin while buffer is drained.
  */

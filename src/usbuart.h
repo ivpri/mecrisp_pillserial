@@ -20,15 +20,49 @@
 #ifndef __USBUART_H
 #define __USBUART_H
 
+#ifdef ENABLE_FORTH
+#define USART_FORTH USART1
+#define FORTH_ENDPOINT 1
+#define USB_ENDPOINT1_OUT_CB forth_usb_out_cb
+#define USB_ENDPOINT1_IN_CB  forth_usb_in_cb
+#else
+#define UART1_ENDPOINT 1
+#define USB_ENDPOINT1_OUT_CB uart1_usb_out_cb
+#define USB_ENDPOINT1_IN_CB  uart1_usb_in_cb
+#endif
+
+#define UART2_ENDPOINT 3
+#define UART3_ENDPOINT 5
+
+#define USB_ENDPOINT3_OUT_CB uart2_usb_out_cb
+#define USB_ENDPOINT5_OUT_CB uart3_usb_out_cb
+
+#define USB_ENDPOINT3_IN_CB uart2_usb_in_cb
+#define USB_ENDPOINT5_IN_CB uart3_usb_in_cb
+
+#define USB_ENDPOINT0_UART_CTR USART1
+#define USB_ENDPOINT2_UART_CTR USART2
+#define USB_ENDPOINT4_UART_CTR USART3
+
+
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 
 void usbuart_init(void);
 
 void usbuart_set_line_coding(struct usb_cdc_line_coding *coding, int USBUSART);
-void usbuart1_usb_out_cb(usbd_device *dev, uint8_t ep);
-void usbuart2_usb_out_cb(usbd_device *dev, uint8_t ep);
-void usbuart3_usb_out_cb(usbd_device *dev, uint8_t ep);
-void usbuart_usb_in_cb(usbd_device *dev, uint8_t ep);
+
+#ifdef ENABLE_FORTH
+void forth_usb_out_cb(usbd_device *dev, uint8_t ep);
+void forth_usb_in_cb(usbd_device *dev, uint8_t ep);
+#else
+void uart1_usb_out_cb(usbd_device *dev, uint8_t ep);
+void uart1_usb_in_cb(usbd_device *dev, uint8_t ep);
+#endif
+
+void uart2_usb_out_cb(usbd_device *dev, uint8_t ep);
+void uart3_usb_out_cb(usbd_device *dev, uint8_t ep);
+void uart2_usb_in_cb(usbd_device *dev, uint8_t ep);
+void uart3_usb_in_cb(usbd_device *dev, uint8_t ep);
 
 #endif

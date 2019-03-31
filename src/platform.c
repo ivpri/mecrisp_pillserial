@@ -133,14 +133,14 @@ void platform_init(void)
 	initialise_monitor_handles();
 #endif
 	rcc_clock_setup_in_hse_8mhz_out_72mhz();
-	if (rev == 0) {
-		led_idle_run = GPIO8;
-	} else {
-		led_idle_run = GPIO9;
-	}
+	/* if (rev == 0) { */
+	/* 	led_idle_run = GPIO8; */
+	/* } else { */
+	/* 	led_idle_run = GPIO9; */
+	/* } */
 
-	gpio_set_mode(LED_PORT, GPIO_MODE_OUTPUT_2_MHZ,
-	              GPIO_CNF_OUTPUT_PUSHPULL, led_idle_run);
+	/* gpio_set_mode(LED_PORT, GPIO_MODE_OUTPUT_2_MHZ, */
+	/*               GPIO_CNF_OUTPUT_PUSHPULL, led_idle_run); */
 
 	/* Relocate interrupt vector table here */
 	extern int vector_table;
@@ -188,8 +188,8 @@ void platform_delay(uint32_t ms)
 
 void sys_tick_handler(void)
 {
-	if(running_status)
-		gpio_toggle(LED_PORT, LED_IDLE_RUN);
+	/* if(running_status) */
+	/* 	gpio_toggle(LED_PORT, LED_IDLE_RUN); */
 
 	time_ms += 100;
 }

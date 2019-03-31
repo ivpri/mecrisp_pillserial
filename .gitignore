@@ -5,5 +5,13 @@
 *.map
 *.o
 *.elf
+*.def
+*.lss
+*.fs
+*.txt
+*~
+ef
+lib
+mlib
 src/version.h
 src/mapfile

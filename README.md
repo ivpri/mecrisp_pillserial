@@ -1,26 +1,46 @@
-pill\_serial: USB-to-serial x 3
-===============================
+# Two/three USB-to-serial bridges with build in Forth
 
-[![CircleCI](https://circleci.com/gh/satoshinm/pill_serial.svg?style=svg)](https://circleci.com/gh/satoshinm/pill_serial)
+This is merge of two projects:
 
-Triple USB-to-serial adapter firmware for flashing onto an STM32F103C8T6 "blue pill" minimum development board
+- [Mecrisp-Stellaris](https://github.com/jjonethal/mecrisp-stellaris)
+- [pill\_serial](https://github.com/satoshinm/pill_serial)
 
-Run `make` to build, then flash the `src/pill_serial.bin` file to a blue pill over the PA9/PA10 serial port with BOOT0=1.
-Then plug in the blue pill into your PC using USB, and three virtual (ACM CDC, "/dev/usbmodem") serial ports should appear.
-These correspond to the three USART ports available on the board, in order:
+_Mecrisp-Stellaris_ is now a mature Forth system for a lot of ARM microcontrollers. It is especially usefull on popular and cheap STM32F103 devices. However, it uses USART1 on 115kbps as it's terminal and running on 8MHz only.
+STM32F103 hw is quite capable - 72Mhz max, three USARTs, USB FS device with 7 IN/OUT endpoints.
 
-| TX pin | RX pin |
-| ------ | ------ |
-| PB10   | PB11   |
-| PA2    | PA3    |
-| PA9    | PA10   |
+There is already an extension in Forth [available](https://jeelabs.org/article/1718c/) to use USB as a Forth console.
 
-This code is heavily based on the [Black Magic Debug Probe firmware](https://github.com/blacksphere/blackmagic).
-Note if you only need one serial port, you may be better off using the Black Magic Probe, since it also provides a JTAG/SWD probe,
-whereas pill\_serial only provides serial ports.
+On other side, the [pill\_serial](https://github.com/satoshinm/pill_serial) project tried (not succesfully) to create triple virtual COM USB devices and bridge them to to three F103 USARTs.
 
-See also associated blog post: *[Triple USB-to-serial adapter using STM32 blue pill](https://satoshinm.github.io/blog/171223_stm32serial_triple_usb-to-serial_adapter_using_stm32_blue_pill.html)*
+My question was: how about to use the first USB virtual COM as a Forth terminal and have even better "Swiss Army Knife" with two additional USB to serial bridges? This project is the answer to this question.
 
----
+## Supported Boards
 
-**[Comments?](https://www.reddit.com/r/stm32f103/comments/7lu2bz/pill_serial_triple_usbtoserial_adapter_firmware/)**
+- [Blue Pill](https://wiki.stm32duino.com/index.php?title=Blue_Pill)
+- [Maple Mini](https://wiki.stm32duino.com/index.php?title=Maple_Mini) clones
+
+## Quick Start
+
+Find a desired firmware in the bin directory. Choose one with \_mm posfix for Maple Mini or with \_bp for Blue Pill. The one with mecrisp\_ prefix has the Forth build in using first wirtual COM as terminal. The firmware without this pprefix is just USB to triple UART bridge just like original [pill\_serial](https://github.com/satoshinm/pill_serial) was intended with the folloving mapping (assume /dev/usbACM0-3 devices where not yet in use before blug in):
+
+| USB Virtual COM | USART   | TX pin | RX pin |
+| --------------- | ------  | ------ | ------ |
+| /dev/usbACM0    | USART1* | PA9    | PA10   |
+| /dev/usbACM1    | USART2  | PA2    | PA3    |
+| /dev/usbACM2    | USART3  | PB10   | PB11   |
+
+* Forth console instead if firmware with build in Forth
+
+
+Flash the firmware e.g. with st-link and st-flash utility:
+
+```
+st-flash erase
+st-flash --reset write mecrisp_pillserial_bp.bin 0x8000000
+```
+
+
+## TODO
+
+- USB suspend to decrease current consumption to comply with USB specs
+

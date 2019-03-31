@@ -24,6 +24,8 @@
 
 #include "general.h"
 
+extern void ForthReset();
+
 int
 main(int argc, char **argv)
 {
@@ -32,7 +34,11 @@ main(int argc, char **argv)
 #else
 	(void) argc;
 	(void) argv;
-	platform_init();
+
+       	platform_init();
+#endif
+#ifdef ENABLE_FORTH
+	ForthReset();
 #endif
 
 	while (true) {

@@ -438,13 +438,13 @@ static int cdcacm_control_request(usbd_device *dev,
 
 		switch(req->wIndex) {
 		case 0:
-			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf, USART2);
+			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf, USB_ENDPOINT0_UART_CTR);
 			return 1;
 		case 2:
-			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf, USART3);
+			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf, USB_ENDPOINT2_UART_CTR);
 			return 1;
 		case 4:
-			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf, USART1);
+			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf, USB_ENDPOINT4_UART_CTR);
 			return 1;
 		default:
 			return 0;
@@ -479,21 +479,21 @@ static void cdcacm_set_config(usbd_device *dev, uint16_t wValue)
 
 	/* Serial interface */
 	usbd_ep_setup(dev, 0x01, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, usbuart2_usb_out_cb);
+	              CDCACM_PACKET_SIZE, USB_ENDPOINT1_OUT_CB);
 	usbd_ep_setup(dev, 0x81, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, usbuart_usb_in_cb);
+	              CDCACM_PACKET_SIZE, USB_ENDPOINT1_IN_CB);
 	usbd_ep_setup(dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
 
 	usbd_ep_setup(dev, 0x03, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, usbuart3_usb_out_cb);
+	              CDCACM_PACKET_SIZE, USB_ENDPOINT3_OUT_CB);
 	usbd_ep_setup(dev, 0x83, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, usbuart_usb_in_cb);
+	              CDCACM_PACKET_SIZE, USB_ENDPOINT3_IN_CB);
 	usbd_ep_setup(dev, 0x84, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
 
 	usbd_ep_setup(dev, 0x05, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, usbuart1_usb_out_cb);
+	              CDCACM_PACKET_SIZE, USB_ENDPOINT5_OUT_CB);
 	usbd_ep_setup(dev, 0x85, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, usbuart_usb_in_cb);
+	              CDCACM_PACKET_SIZE, USB_ENDPOINT5_IN_CB);
 	usbd_ep_setup(dev, 0x86, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
 
 
@@ -549,7 +549,9 @@ void cdcacm_init(void)
 	nvic_enable_irq(USB_IRQ);
 }
 
-void USB_ISR(void)
+
+RELOC_ISR(usb_lp_can_rx0)
 {
 	usbd_poll(usbdev);
 }
+

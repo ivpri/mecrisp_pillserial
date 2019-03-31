@@ -1,3 +1,6 @@
 [submodule "libopencm3"]
        path = libopencm3
        url = https://github.com/libopencm3/libopencm3
+[submodule "mecrisp-stellaris"]
+	path = mecrisp-stellaris
+	url = https://github.com/jjonethal/mecrisp-stellaris.git

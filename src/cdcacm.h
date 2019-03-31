@@ -28,7 +28,12 @@
 
 #include <libopencm3/usb/usbd.h>
 
-#define CDCACM_PACKET_SIZE 	64
+// F1 devices packet memory is 512B only so it leaves 56B max
+// for rx and tx buffers: (64+64+3*(2*CDCACM_PACKET_SIZE+16)) <= 512
+// But USB Buffer Description table allows buffer of sizes 2B - 32B as
+// multiply of 2 then 32B, 64B up to 1024B as multily of 32 so 32
+// is maximum supported packet size
+#define CDCACM_PACKET_SIZE 	32
 
 extern usbd_device *usbdev;
 

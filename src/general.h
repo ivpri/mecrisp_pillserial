@@ -32,6 +32,14 @@
 
 #include "platform.h"
 
+#define RELOC_ISR(name)					\
+  void name ## _isrr(void);				\
+  void (* irq_hook_ ## name)() = &name ## _isrr;	\
+  void name ## _isr(void) { (* irq_hook_ ## name)(); }	\
+  void name ## _isrr(void)
+
+
+
 #ifndef DEBUG
 #include <stdio.h>
 #define DEBUG	printf
